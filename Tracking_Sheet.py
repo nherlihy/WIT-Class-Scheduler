@@ -74,8 +74,6 @@ credits_list = []
 SEMESTERS = (("FALL", 0), ("SPRING", 1), ("SUMMER", 2))
 CURRENT_SEMESTER = SEMESTERS[0]
 
-print tracking_sheet_list
-
 # print "Current semester: ", SEMESTER_NAME
 # print "Semeseter index: ", SEMESTER_INDEX
 
@@ -102,20 +100,28 @@ counted_classes = collections.Counter(flattened_tracking_sheet) - collections.Co
 #                 else:
 #                     print "Class is offered every semester"
 
+
 while tracking_sheet_list:
     print "Current semester: ", CURRENT_SEMESTER[0]
-    print "tracking count: ", len(tracking_sheet_list)
-    print "credit count: ", len(credits_list)
     semester_classes = []
     class_index = 0
     while len(semester_classes) < 4:
         try:
             current_class = tracking_sheet_list[class_index]
         except IndexError:
-            print "shedule created"
-            print "tracking sheet: ", tracking_sheet_list
-            print "credit_list:", credits_list
-            sys.exit()
+            break
+
+        # if "Coop" in current_class:
+        #     print "contains coop"
+        #     if len(semester_classes) == 0:
+        #         print "Semester empty"
+        #         semester_classes.append(current_class)
+        #         tracking_sheet_list.remove(tracking_sheet_list[class_index])
+        #     else:
+        #         print "semester not empty"
+        #         class_index += 1
+        #         continue
+
 
         if (current_class not in offerings) or offerings[current_class][CURRENT_SEMESTER[1]]:
             if current_class in prerequisite_list:
@@ -150,11 +156,13 @@ while tracking_sheet_list:
     else:
         CURRENT_SEMESTER = SEMESTERS[1]
 
-    print "tracking sheet: ", tracking_sheet_list 
-    print "credit class: ", credits_list
     print "---------------------------"
 
-    # time.sleep(10)
+
+"""
+Classes not being added
+'HUSS', 'Comp5500','MathSci',
+"""
 
 
 

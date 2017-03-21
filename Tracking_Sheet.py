@@ -165,6 +165,7 @@ while tracking_sheet_list:
     print "---------------------------"
 
 """
-Classes not being added
-'HUSS', 'Comp5500','MathSci',
+add credits weight
+backtraceclasses
+most constrained
 """

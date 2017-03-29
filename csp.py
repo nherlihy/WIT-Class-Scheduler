@@ -49,6 +49,7 @@ prerequisite_list = {"Math1850": ["Math1750"],
                      }
 
 problem = Problem()
+print "Solution: ", problem.getSolution()
 
 for course in tracking_sheet_list:
 	semester_offerings = []
@@ -67,15 +68,17 @@ for course in tracking_sheet_list:
 			semester_offerings.append(6)
 			semester_offerings.append(9)
 	else:
-		semester_offerings.append(1)
-		semester_offerings.append(2)
-		semester_offerings.append(3)
-		semester_offerings.append(4)
-		semester_offerings.append(5)
-		semester_offerings.append(6)
-		semester_offerings.append(7)
-		semester_offerings.append(8)
-		semester_offerings.append(9)
+    map(lambda num:semester_offerings.append(num), xrange(0,10))
+    print "offerings: ", semester_offerings
+		# semester_offerings.append(1)
+		# semester_offerings.append(2)
+		# semester_offerings.append(3)
+		# semester_offerings.append(4)
+		# semester_offerings.append(5)
+		# semester_offerings.append(6)
+		# semester_offerings.append(7)
+		# semester_offerings.append(8)
+		# semester_offerings.append(9)
 
 	problem.addVariable(course, semester_offerings)
 
@@ -83,7 +86,7 @@ for key,courses in prerequisite_list.iteritems():
   for course in courses:
     problem.addConstraint(lambda course1, course2: course1 > course2, [key, course])
 
-print problem.getSolutions()
+print problem.getSolution()
 
 
 

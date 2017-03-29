@@ -77,40 +77,13 @@ for course in tracking_sheet_list:
 		semester_offerings.append(8)
 		semester_offerings.append(9)
 
-	print "AddingCourse: %s -- %s" % (course, semester_offerings)
 	problem.addVariable(course, semester_offerings)
-print "-------------------------------------------"
-problem.addConstraint(lambda course1, course2: course1 > course2, ["Math1850", "Math1750"])
-problem.addConstraint(lambda course1, course2: course1 > course2, ["Math2100", "Math1850"])
-problem.addConstraint(lambda course1, course2: course1 > course2, ["Math2860", "Math1850"])
-problem.addConstraint(lambda course1, course2: course1 > course2, ["Math2100", "Math1850"])
-problem.addConstraint(lambda course1, course2: course1 > course2, ["Comp1050", "Comp1000"])
-problem.addConstraint(lambda course1, course2: course1 > course2, ["Comp1200", "Comp1000"])
-problem.addConstraint(lambda course1, course2: course1 > course2, ["Comp1200", "Math2300"])
-problem.addConstraint(lambda course1, course2: course1 > course2, ["Comp2100", "Comp1050"])
-problem.addConstraint(lambda course1, course2: course1 > course2, ["Comp2100", "Comp1200"])
-problem.addConstraint(lambda course1, course2: course1 > course2, ["Comp2350", "Comp1050"])
-problem.addConstraint(lambda course1, course2: course1 > course2, ["Comp2350", "Comp1200"])
-problem.addConstraint(lambda course1, course2: course1 > course2, ["Comp2000", "Comp1050"])
-problem.addConstraint(lambda course1, course2: course1 > course2, ["Comp2000", "Comp1200"])
-problem.addConstraint(lambda course1, course2: course1 > course2, ["Comp2650", "Comp1050"])
-problem.addConstraint(lambda course1, course2: course1 > course2, ["Comp2650", "Math2300"])
-problem.addConstraint(lambda course1, course2: course1 > course2, ["Math2860", "Math1850"])
-problem.addConstraint(lambda course1, course2: course1 > course2, ["Comp3450", "Comp2100"])
-problem.addConstraint(lambda course1, course2: course1 > course2, ["Comp3450", "Comp2350"])
-problem.addConstraint(lambda course1, course2: course1 > course2, ["Comp3450", "Comp2000"])
-problem.addConstraint(lambda course1, course2: course1 > course2, ["Comp3350", "Comp2350"])
-problem.addConstraint(lambda course1, course2: course1 > course2, ["Comp3350", "Comp2000"])
-problem.addConstraint(lambda course1, course2: course1 > course2, ["Comp3400", "Comp2350"])
-problem.addConstraint(lambda course1, course2: course1 > course2, ["Comp3400", "Comp2000"])
-problem.addConstraint(lambda course1, course2: course1 > course2, ["Comp4960", "Comp2350"])
-problem.addConstraint(lambda course1, course2: course1 > course2, ["Comp4960", "Comp2000"])
-problem.addConstraint(lambda course1, course2: course1 > course2, ["Comp4960", "Comp2650"])
 
+for key,courses in prerequisite_list.iteritems():
+  for course in courses:
+    problem.addConstraint(lambda course1, course2: course1 > course2, [key, course])
 
-solution = problem.getSolution()
-# print solution
-print problem.getSolution()
+print problem.getSolutions()
 
 
 

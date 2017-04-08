@@ -1,4 +1,7 @@
+import sys
+import operator
 from constraint import *
+from datetime import datetime
 
 tracking_sheet_list = ["Comp1000", "Math2300", "Math1750", "English1",
                        "Comp1050", "Comp1200", "Math1850", "English2",
@@ -49,7 +52,6 @@ prerequisite_list = {"Math1850": ["Math1750"],
                      }
 
 problem = Problem()
-print "Solution: ", problem.getSolution()
 
 for course in tracking_sheet_list:
 	semester_offerings = []
@@ -68,25 +70,50 @@ for course in tracking_sheet_list:
 			semester_offerings.append(6)
 			semester_offerings.append(9)
 	else:
-    map(lambda num:semester_offerings.append(num), xrange(0,10))
-    print "offerings: ", semester_offerings
-		# semester_offerings.append(1)
-		# semester_offerings.append(2)
-		# semester_offerings.append(3)
-		# semester_offerings.append(4)
-		# semester_offerings.append(5)
-		# semester_offerings.append(6)
-		# semester_offerings.append(7)
-		# semester_offerings.append(8)
-		# semester_offerings.append(9)
-
+		map(lambda num:semester_offerings.append(num), xrange(1,10))
+	
 	problem.addVariable(course, semester_offerings)
 
 for key,courses in prerequisite_list.iteritems():
-  for course in courses:
-    problem.addConstraint(lambda course1, course2: course1 > course2, [key, course])
+	for course in courses:
+		problem.addConstraint(lambda course1, course2: course1 > course2, [key, course])
 
-print problem.getSolution()
+# for num in range(1,9):
+# 	problem.addConstraint(SomeInSetConstraint([num], 4, True))
+problem.addConstraint(SomeInSetConstraint([1], 4, True))
+problem.addConstraint(SomeInSetConstraint([2], 4, True))
+problem.addConstraint(SomeInSetConstraint([3], 4, True))
+problem.addConstraint(SomeInSetConstraint([4], 4, True))
+# problem.addConstraint(SomeInSetConstraint([5], 4, True))
+
+time_start = datetime.now()
+print "Start: %s\n" % time_start
+solution = problem.getSolution()
+time_finish = datetime.now()
+print "Finish: %s\n" % time_finish
+print solution
+
+# for sol in solutions:
+# 	print sol
+# 	print "\n\n\n"
+
+
+
+
+
+
+# max_val = solution[max(solution, key=lambda i: solution[i])]
+# sorted_dict = sorted(solution.items(), key=lambda x:x[1])
+
+
+# print "MAX: %s" % max_val
+
+# for item in sorted_dict:
+# 	course, semester_num = item
+# 	print "%s --- %s" % (course, semester_num) 
+
+
+	
 
 
 

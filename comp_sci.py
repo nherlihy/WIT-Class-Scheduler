@@ -48,23 +48,6 @@ offerings = {"Comp1000": [True, True, False],
              "Comp5500": [False, False, True]
              }
 
-# credits_list = ["Comp1000", "Math2300", "Math1750", "English1",
-# "Comp1050", "Comp1200", "Math1850", "English2", "Comp2100", "Math2860", "HUSS1",
-# "Comp2350", "Comp2650", "Math2100", "HUSS2",
-# "Coop3000",
-# "Comp3400", "Comp1", "MathSci1", "HUSS3",
-# "Coop4000",
-# "Comp3350", "Comp2", "MathSci2",
-# "Coop6000",
-# "Comp4960", "Comp3", "Comp4", "HUSS4"]
-
-# credits_list = ["Comp1000", "Math2300", "Math1750", "English1",
-# "Comp1050", "Comp1200", "Math1850", "English2", "Comp2100", "Math2860", "HUSS1",
-# "Comp2350", "Comp2650", "Math2100", "HUSS2",
-# "Coop3000",
-# "Comp3400", "Comp1", "MathSci1", "HUSS3",
-# "Coop4000"]
-
 credits_list = ["Comp1000", "Math2300", "Math1750", "English1",
                        "Comp1050", "Comp1200", "Math1850", "English2",
                        "Comp2000", "Comp2100", "Math2860", "HUSS1",
@@ -74,7 +57,8 @@ credits_list = ["Comp1000", "Math2300", "Math1750", "English1",
                        "Coop4000",
                        "Comp3350", "Comp3450", "Comp2", "MathSci2",
                        "Coop6000",
-                       "Comp4960", "Comp3"]
+                       "Comp4960", "Comp3", "Comp4", "HUSS4",
+                       "Comp5500", "Comp5", "MathSci3", "HUSS5"]
 
 
 scheduler = ClassScheduler(tracking_sheet_list, prerequisite_list, offerings, credits_list, 4)

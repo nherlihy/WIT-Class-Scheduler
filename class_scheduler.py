@@ -1,3 +1,4 @@
+import sys
 from constraint import *
 
 from datetime import datetime
@@ -13,6 +14,12 @@ class ClassScheduler:
 		self.credits = credits
 		self.remaining_courses = list(set(self.courses) - set(self.credits))
 
+		if not self.remaining_courses:
+			print "Student is not missing courses"
+			sys.exit()
+
+		# Prevents invalid constraint from being set where the
+		# required class per semester is greater than the remaining courses
 		if num_classes > len(self.remaining_courses):
 			self.num_classes = len(self.remaining_courses)
 		else:
@@ -61,6 +68,7 @@ class ClassScheduler:
 		spring_semesters = 0 
 		summer_semesters = 0
 
+		# There will be at least one of every semester
 		if self.semester_cycles > 0:
 			for num in range(0, self.semester_cycles):
 				fall_semesters += 1
@@ -68,6 +76,9 @@ class ClassScheduler:
 				summer_semesters += 1
 
 			semester_remainder = self.remaining_semesters[0] % 3
+
+			# There is also one additional semester. It will
+			# be the same season as the starting semester
 			if semester_remainder == 1:
 				if self.starting_semester[1] == 0:
 					fall_semesters += 1
@@ -75,6 +86,9 @@ class ClassScheduler:
 					spring_semesters += 1
 				else:
 					summer_semesters +=1
+
+			# There are two additional semesters. They will be
+			# the current semester and the next one
 			elif semester_remainder == 2:
 				if self.starting_semester[1] == 0:
 					fall_semesters += 1
@@ -86,6 +100,8 @@ class ClassScheduler:
 					summer_semesters +=1
 					fall_semesters += 1
 
+		# There are less than 3 semesters. Add one to the
+		# starting semester and to the next if there is one(remaining_semesters == 3).
 		else:
 			if self.starting_semester[1] == 0:
 				fall_semesters += 1
@@ -104,10 +120,12 @@ class ClassScheduler:
 
 		return (fall_semesters, spring_semesters, summer_semesters)
 
+
 	"""
 		Determines the domains for courses based on when they are offered and
 		how many of each semesters there will be
-
+		
+		input - number of fall, spring, and summer semesters in the schedule
 		returns - list with number values representing the semesters
 		
 		number % 3 == 1 -> Fall Semester
@@ -115,26 +133,34 @@ class ClassScheduler:
 		number % 3 == 3 -> Summer Semester 
 
 	"""
-	def calc_course_offerings(self, course, fall_semesters, spring_semesters, summer_semesters):
+	def calc_course_offerings(self, course):
 		semester_offerings = []
+		fall_semesters, spring_semesters, summer_semesters = self.calc_num_semesters()
 
-		# Course has is not offered every semester
+		# Course is not offered every semester
 		if course in self.offerings:
 			offered = self.offerings[course]
+
+			# Offered in fall
 			if offered[0] and fall_semesters > 0:
-				semester_offerings.append(1)
+				diff = (self.starting_semester[1] + 1) - 1
+				semester_offerings.append(self.starting_semester[1] + 1 + diff)
 				if fall_semesters > 1:
 					for num in range(1,fall_semesters):
 						semester_offerings.append((num * 3) + 1)
 
+			# Offered in Spring
 			if offered[1] and spring_semesters > 0:
-				semester_offerings.append(2)
+				diff = (self.starting_semester[1] + 1) - 2
+				semester_offerings.append(self.starting_semester[1] + 1 + diff)
 				if spring_semesters > 1:
 					for num in range(1, spring_semesters):
 						semester_offerings.append((num * 3) + 2)
 
+			# Offered in Summer
 			if offered[2] and summer_semesters > 0:
-				semester_offerings.append(3)
+				diff = (self.starting_semester[1] + 1) - 3
+				semester_offerings.append(self.starting_semester[1] + 1 + diff)
 				if summer_semesters > 1:
 					for num in range(1, summer_semesters):
 						semester_offerings.append((num* 3) + 3)
@@ -142,7 +168,7 @@ class ClassScheduler:
 		# Course is offered every semester
 		else:
 			if self.semester_cycles > 0:
-				map(lambda num:semester_offerings.append(num), xrange(1, (self.semester_cycles  * 3) + 1))
+				map(lambda num:semester_offerings.append(num), xrange(self.starting_semester[1] + 1, (self.semester_cycles  * 3) + 3))
 
 				semester_remainder = self.remaining_semesters[0] % 3
 				if semester_remainder == 1:
@@ -166,20 +192,20 @@ class ClassScheduler:
 						semester_offerings.append((self.semester_cycles * 3)+ 1)
 			else:
 				if self.remaining_semesters[0] > 1:
-					semester_offerings.append(self.starting_semester[1])
+					semester_offerings.append(self.starting_semester[1] + 1)
 
-					if self.starting_semester[1] == 1:
-						semester_offerings.append(2)
-
-					elif self.starting_semester[1] == 2:
+					if self.starting_semester[1] == 0:
 						semester_offerings.append(3)
 
+					elif self.starting_semester[1] == 2:
+						semester_offerings.append(4)
+
 					else:
-						semester_offerings.append(1)
+						semester_offerings.append(5)
 
 
 				else:
-					semester_offerings.append(self.starting_semester[1])
+					semester_offerings.append(self.starting_semester[1] + 1)
 
 		return semester_offerings
 
@@ -206,7 +232,7 @@ class ClassScheduler:
 					self.problem.addConstraint(SomeInSetConstraint([3], self.num_classes, True))
 				else:
 					self.problem.addConstraint(SomeInSetConstraint([3], self.num_classes, True))
-					self.problem.addConstraint(SomeInSetConstraint([1], self.num_classes, True))
+					self.problem.addConstraint(SomeInSetConstraint([4], self.num_classes, True))
 
 			elif self.semester_cycles > 0:
 				last_semester = self.starting_semester[1] + self.remaining_semesters[0]
@@ -220,7 +246,7 @@ class ClassScheduler:
 					self.problem.addConstraint(SomeInSetConstraint([semester], self.num_classes, True))
 
 			else:
-				self.problem.addConstraint(SomeInSetConstraint([self.starting_semester[1]], self.num_classes, True))
+				self.problem.addConstraint(SomeInSetConstraint([self.starting_semester[1] + 1], self.num_classes, True))
 		
 		# All semester will have the number of classes
 		else:
@@ -228,10 +254,10 @@ class ClassScheduler:
 				for semester in range(1, self.remaining_semesters[0]+1):
 					self.problem.addConstraint(SomeInSetConstraint([semester], self.num_classes, True))
 			
-			# Covers scenrio where self.num_classes is set to len(self.remaining_courses)
+			# Covers scenrio where self.num_classes == len(self.remaining_courses)
 			else:
 				if self.remaining_semesters[0] == 1:
-					self.problem.addConstraint(SomeInSetConstraint([self.starting_semester[1]], self.num_classes, True))	
+					self.problem.addConstraint(SomeInSetConstraint([self.starting_semester[1] + 1], self.num_classes, True))	
 				else:
 					self.problem.addConstraint(SomeInSetConstraint([self.starting_semester[1]], self.num_classes, True))
 
@@ -243,27 +269,32 @@ class ClassScheduler:
 						self.problem.addConstraint(SomeInSetConstraint([1], self.num_classes, True))
 
 
+	"""
+		Puts solutions into format "semesterName Year" for better
+		representation
+
+		input - solutions to the problem
+		output - list of normalized solutions that has semesterName and Year 
+				 instead of the number
+	"""
 	def normalize_solutions(self, solutions):
 		year = datetime.now().year
 		normalized_solutions = []
 		for solution in solutions:
-			print solution
 			schedule = {}
 			for course,semester in solution.iteritems():
 				semester_number = semester % 3 
 				year_number = semester / 3
 
 				if semester_number == 1:
-					value = SEMESTERS[0][0] + " " + str(year + year_number)
+					value = SEMESTERS[0][0] + " " + str(year + (year_number - 1))
 				elif semester_number == 2:
-					value = SEMESTERS[1][0] + " " + str(year + year_number)
+					value = SEMESTERS[1][0] + " " + str(year + (year_number))
 				else:
-					value = SEMESTERS[2][0] + " " + str(year + year_number)
+					value = SEMESTERS[2][0] + " " + str(year + (year_number - 1))
 				schedule[course] = value
-
-			print schedule
-			print "---------------------------"
 			normalized_solutions.append(schedule)
+				
 		return normalized_solutions
 
 
@@ -275,18 +306,20 @@ class ClassScheduler:
 		Solutions are dictionaries with key:value pairs representing  Course: Semester
 	"""
 	def solve(self):
+		print "Starting Semester: ", self.starting_semester[0]
 		fall_semesters, spring_semesters, summer_semesters = self.calc_num_semesters()
 
 		for course in self.remaining_courses:
-			self.problem.addVariable(course, self.calc_course_offerings(course, fall_semesters, spring_semesters, summer_semesters))
-		
+			offerings = self.calc_course_offerings(course)
+			if offerings:
+				self.problem.addVariable(course, offerings)
+			else:
+				print "ERROR--%s cannot be added due to limited offerings." % course
+				sys.exit()
+
 		self.set_constraints()
-		solutions =self.problem.getSolutions()
+		solutions = self.normalize_solutions(self.problem.getSolutions())
 		return solutions
-
-
-
-	# def clean_solution(self, solution):
 
 
 

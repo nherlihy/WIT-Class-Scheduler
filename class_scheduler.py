@@ -34,7 +34,6 @@ class ClassScheduler:
 
 		self.semester_cycles = self.remaining_semesters[0] / 3
 		self.problem = Problem()
-		print "Reamaining semes: ", self.remaining_semesters
 
 	"""
 		Detrmines starting semester based on current month
@@ -316,6 +315,7 @@ class ClassScheduler:
 				sys.exit()
 		self.set_constraints()
 		solutions = self.normalize_solutions(self.problem.getSolutions())
+		print "Number of Solutions", len(solutions)
 		return solutions
 
 

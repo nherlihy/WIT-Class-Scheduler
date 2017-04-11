@@ -53,7 +53,8 @@ credits_list = [ "Coop3000", "Coop4000" ,"Coop6000" ,"Comp1000", "Math2300", "Ma
                        "Comp1050", "Comp1200", "Math1850", "English2",
                        "Comp2000", "Comp2100", "Math2860", "HUSS1",
 
-                       "Comp2350", "Comp2650", "Math2100", "HUSS2"]
+                       "Comp2350", "Comp2650", "Math2100", "HUSS2"
+                       "Comp3400", "Comp1", "MathSci1", "HUSS3"]
 
 classes_per_semester = 4
 scheduler = ClassScheduler(tracking_sheet_list, prerequisite_list, offerings, credits_list, classes_per_semester)

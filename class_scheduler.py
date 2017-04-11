@@ -222,21 +222,21 @@ class ClassScheduler:
 		# One semester will not be filled
 		if self.remaining_semesters[1]:
 			if self.semester_cycles > 0 and self.remaining_semesters[0] == 3:
-				if self.starting_semester[1] == 0:
-					self.problem.addConstraint(SomeInSetConstraint([1], self.num_classes, True))
-					self.problem.addConstraint(SomeInSetConstraint([2], self.num_classes, True))
-				elif self.starting_semester[1] == 1: 
-					self.problem.addConstraint(SomeInSetConstraint([2], self.num_classes, True))
-					self.problem.addConstraint(SomeInSetConstraint([3], self.num_classes, True))
-				else:
-					self.problem.addConstraint(SomeInSetConstraint([3], self.num_classes, True))
-					self.problem.addConstraint(SomeInSetConstraint([4], self.num_classes, True))
+				self.problem.addConstraint(SomeInSetConstraint([self.starting_semester[1] + 1], self.num_classes, True))
+				self.problem.addConstraint(SomeInSetConstraint([self.starting_semester[1] + 2], self.num_classes, True))
 
 			elif self.semester_cycles > 0:
 				last_semester = self.starting_semester[1] + self.remaining_semesters[0]
+				
 				for course in self.problem._variables:
 					if course not in self.offerings:
 						constraint_list = self.problem._variables[course]
+						break
+				last_semester = 0
+				for num in constraint_list:
+					if num > last_semester:
+						last_semester = num
+
 				constraint_list.remove(last_semester)
 
 				for semester in constraint_list:
@@ -303,6 +303,7 @@ class ClassScheduler:
 		Solutions are dictionaries with key:value pairs representing  Course: Semester
 	"""
 	def solve(self):
+		print "Total semesters left: ", self.remaining_semesters[0]
 		print "Starting Semester: ", self.starting_semester[0]
 		fall_semesters, spring_semesters, summer_semesters = self.calc_num_semesters()
 
@@ -313,6 +314,7 @@ class ClassScheduler:
 			else:
 				print "ERROR--%s cannot be added due to limited offerings." % course
 				sys.exit()
+
 		self.set_constraints()
 		solutions = self.normalize_solutions(self.problem.getSolutions())
 		print "Number of Solutions", len(solutions)

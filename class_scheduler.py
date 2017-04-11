@@ -233,7 +233,7 @@ class ClassScheduler:
 					self.problem.addConstraint(SomeInSetConstraint([4], self.num_classes, True))
 
 			elif self.semester_cycles > 0:
-				last_semester = self.starting_semester[1] + self.remaining_semesters[0] - 1
+				last_semester = self.starting_semester[1] + self.remaining_semesters[0]
 				for course in self.problem._variables:
 					if course not in self.offerings:
 						constraint_list = self.problem._variables[course]

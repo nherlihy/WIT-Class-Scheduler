@@ -34,6 +34,7 @@ class ClassScheduler:
 
 		self.semester_cycles = self.remaining_semesters[0] / 3
 		self.problem = Problem()
+		print "Reamaining semes: ", self.remaining_semesters
 
 	"""
 		Detrmines starting semester based on current month
@@ -169,7 +170,6 @@ class ClassScheduler:
 		else:
 			if self.semester_cycles > 0:
 				map(lambda num:semester_offerings.append(num), xrange(self.starting_semester[1] + 1, (self.semester_cycles  * 3) + 3))
-
 				semester_remainder = self.remaining_semesters[0] % 3
 				if semester_remainder == 1:
 					if self.starting_semester[1] == 0:
@@ -223,6 +223,7 @@ class ClassScheduler:
 
 		# One semester will not be filled
 		if self.remaining_semesters[1]:
+			print "if"
 			if self.semester_cycles > 0 and self.remaining_semesters[0] == 3:
 				if self.starting_semester[1] == 0:
 					self.problem.addConstraint(SomeInSetConstraint([1], self.num_classes, True))
@@ -235,8 +236,7 @@ class ClassScheduler:
 					self.problem.addConstraint(SomeInSetConstraint([4], self.num_classes, True))
 
 			elif self.semester_cycles > 0:
-				last_semester = self.starting_semester[1] + self.remaining_semesters[0]
-
+				last_semester = self.starting_semester[1] + self.remaining_semesters[0] - 1
 				for course in self.problem._variables:
 					if course not in self.offerings:
 						constraint_list = self.problem._variables[course]
@@ -251,7 +251,7 @@ class ClassScheduler:
 		# All semester will have the number of classes
 		else:
 			if self.semester_cycles > 0:
-				for semester in range(1, self.remaining_semesters[0]+1):
+				for semester in range(self.starting_semester[1] + 1, self.starting_semester[1] + self.remaining_semesters[0]):
 					self.problem.addConstraint(SomeInSetConstraint([semester], self.num_classes, True))
 			
 			# Covers scenrio where self.num_classes == len(self.remaining_courses)

@@ -140,9 +140,7 @@ class ClassScheduler:
 
 		# Course is not offered every semester
 		if course in self.offerings:
-			print course
 			offered = self.offerings[course]
-
 			# Offered in fall
 			if offered[0] and fall_semesters > 0:
 				diff = (self.starting_semester[1] + 1) - 2
@@ -316,7 +314,6 @@ class ClassScheduler:
 			else:
 				print "ERROR--%s cannot be added due to limited offerings." % course
 				sys.exit()
-		print self.problem._variables
 		self.set_constraints()
 		solutions = self.normalize_solutions(self.problem.getSolutions())
 		return solutions

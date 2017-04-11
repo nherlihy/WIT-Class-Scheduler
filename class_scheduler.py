@@ -223,7 +223,6 @@ class ClassScheduler:
 
 		# One semester will not be filled
 		if self.remaining_semesters[1]:
-			print "if"
 			if self.semester_cycles > 0 and self.remaining_semesters[0] == 3:
 				if self.starting_semester[1] == 0:
 					self.problem.addConstraint(SomeInSetConstraint([1], self.num_classes, True))
@@ -248,7 +247,7 @@ class ClassScheduler:
 			else:
 				self.problem.addConstraint(SomeInSetConstraint([self.starting_semester[1] + 1], self.num_classes, True))
 		
-		# All semester will have the number of classes
+		# All semester will have the same number of classes
 		else:
 			if self.semester_cycles > 0:
 				for semester in range(self.starting_semester[1] + 1, self.starting_semester[1] + self.remaining_semesters[0]):
@@ -259,7 +258,7 @@ class ClassScheduler:
 				if self.remaining_semesters[0] == 1:
 					self.problem.addConstraint(SomeInSetConstraint([self.starting_semester[1] + 1], self.num_classes, True))	
 				else:
-					self.problem.addConstraint(SomeInSetConstraint([self.starting_semester[1]], self.num_classes, True))
+					self.problem.addConstraint(SomeInSetConstraint([self.starting_semester[1] + 1], self.num_classes, True))
 
 					if self.starting_semester[1] == 1:
 						self.problem.addConstraint(SomeInSetConstraint([2], self.num_classes, True))
